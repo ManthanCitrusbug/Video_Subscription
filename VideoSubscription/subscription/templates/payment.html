@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Accept a payment</title>
+    <meta name="description" content="A demo of a payment on Stripe" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <script src="https://code.jquery.com/jquery-2.0.2.min.js"></script>
+    <script defer src="{% static 'js/bootstrap.js' %}"></script>
+    <script defer src="{% static 'js/jquery.js' %}"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="{% static 'js/checkout.js' %}" defer></script>
+</head>
+
+<body>
+    <div class="form-control w-75 m-auto text-center mt-5">
+        <h1>Get Subscription</h1>
+        <h2>Our Plans</h2>
+        <h3>Monthly : 250₹</h3>
+        <h3>Yearly : 2400₹</h3>
+
+        <form action="" method="POST" id="payment-form">
+            {% csrf_token %}
+            <select name="sub_type" id="">
+                <option value="250">Monthly - 250₹</option>
+                <option value="2400">Yealry - 2400₹</option>
+            </select>
+            <div class="form-row">
+                <label for="card-element">
+                    Credit or debit card
+                </label>
+                <div id="card-element">
+                    <!-- a Stripe Element will be inserted here. -->
+                </div>
+
+                <!-- Used to display form errors -->
+                <div id="card-errors" role="alert"></div>
+            </div>
+            <button>Submit Payment</button>
+        </form>
+    </div>
+
+
+    <script>
+        var stripe = Stripe('pk_test_51L3uRpSBHoeSNjbt8e8HtvOpniS7qpCjvvkTmiQcNnTribAXeT8D5OaXKlTD7fjaSMrJc0sScddL9wbyMVfFDfsM00wVnDaPxW');
+        var elements = stripe.elements();
+
+        var style = {
+            base: {
+                color: '#303238',
+                fontSize: '16px',
+                fontFamily: '"Open Sans", sans-serif',
+                fontSmoothing: 'antialiased',
+                '::placeholder': {
+                    color: '#CFD7DF',
+                },
+            },
+            invalid: {
+                color: '#e5424d',
+                ':focus': {
+                    color: '#303238',
+                },
+            },
+        };
+        var card = elements.create('card', { style: style });
+        card.mount('#card-element');
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <script defer src="{% static 'js/bootstrap.js' %}"></script>
+  <script defer src="{% static 'js/jquery.js' %}"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <h1 class="text-center m-5">Welcom {{request.user}}</h1>
+  <div class="text-center">
+    <a href="{% url 'subscription:logout' %}" class="btn btn-primary">Logout</a>
+  </div><br>
+  <div class="form-control w-75 m-auto">
+    <div class="row">
+      {% for video in videos %}
+      <div class="col-sm-4">
+        <div class="card" style="width: 18rem;">
+          <img class="card-img-top" src="{{video.image.url}}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{video.name}}</h5>
+            <p class="card-text">{{video.discription}}</p>
+
+            {% if video.subscription_type == "free" %}
+            <p class="badge bg-success">Free</p><br>
+            <a href="{% url 'subscription:watch_video' video.id %}" class="btn btn-primary">Watch Video</a>
+            {% endif %}
+
+            {% if video.subscription_type == "monthly" %}
+            <p class="badge bg-success">Monthly</p><br>
+
+            {% if request.user.subscribe == "free" %}
+              <a href="{% url 'subscription:payment' %}" class="btn btn-warning">Get Subscription</a>
+            {% elif request.user.subscribe == "monthly" or request.user.subscribe == "yearly" %}
+              <a href="{% url 'subscription:watch_video' video.id %}" class="btn btn-primary">Watch Video</a>
+            {% endif %}
+
+            {% endif %}
+
+            {% if video.subscription_type == "yearly" %}
+            <p class="badge bg-success">Yearly</p><br>
+
+            {% if request.user.subscribe == "free" or request.user.subscribe == "monthly" %}
+              <a href="{% url 'subscription:payment' %}" class="btn btn-warning">Get Subscription</a>
+            {% elif request.user.subscribe == "yearly" %}
+              <a href="{% url 'subscription:watch_video' video.id %}" class="btn btn-primary">Watch Video</a>
+            {% endif %}
+
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+
+</html>
